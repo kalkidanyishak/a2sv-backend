@@ -1,10 +1,11 @@
 from django.db import models
-from surveyors.models import Surveyor
+from accounts.models import SurveyorProfile
+
 from mothers.models import Mother
 
 class Child(models.Model):
     mother = models.ForeignKey(Mother, on_delete=models.CASCADE, related_name='children')
-    surveyor = models.ForeignKey(Surveyor, on_delete=models.SET_NULL, null=True, related_name='children')
+    surveyor = models.ForeignKey(SurveyorProfile, on_delete=models.SET_NULL, null=True, related_name='children')
     name = models.CharField(max_length=100)
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=10)
@@ -17,7 +18,7 @@ class Child(models.Model):
 
 class NeonatalHealth(models.Model):
     child = models.ForeignKey(Child, on_delete=models.CASCADE, related_name='neonatal_health')
-    surveyor = models.ForeignKey(Surveyor, on_delete=models.SET_NULL, null=True, related_name='neonatal_health')
+    surveyor = models.ForeignKey(SurveyorProfile, on_delete=models.SET_NULL, null=True, related_name='neonatal_health')
     apgar_score = models.CharField(max_length=10)
     newborn_screening_results = models.TextField()
     congenital_conditions = models.TextField()
@@ -28,7 +29,7 @@ class NeonatalHealth(models.Model):
 
 class InfantChildHealth(models.Model):
     child = models.ForeignKey(Child, on_delete=models.CASCADE, related_name='infant_child_health')
-    surveyor = models.ForeignKey(Surveyor, on_delete=models.SET_NULL, null=True, related_name='infant_child_health')
+    surveyor = models.ForeignKey(SurveyorProfile, on_delete=models.SET_NULL, null=True, related_name='infant_child_health')
     checkup_date = models.DateField()
     weight = models.FloatField()
     height = models.FloatField()

@@ -1,8 +1,9 @@
 from django.db import models
-from surveyors.models import Surveyor
+from accounts.models import SurveyorProfile
+
 
 class Mother(models.Model):
-    surveyor = models.ForeignKey(Surveyor, on_delete=models.SET_NULL, null=True, related_name='mothers')
+    surveyor = models.ForeignKey(SurveyorProfile, on_delete=models.SET_NULL, null=True, related_name='mothers')
     name = models.CharField(max_length=100)
     age = models.PositiveIntegerField()
     marital_status = models.CharField(max_length=50)
@@ -18,7 +19,7 @@ class Mother(models.Model):
 
 class AntenatalCare(models.Model):
     mother = models.ForeignKey(Mother, on_delete=models.CASCADE, related_name='antenatal_care')
-    surveyor = models.ForeignKey(Surveyor, on_delete=models.SET_NULL, null=True, related_name='antenatal_care')
+    surveyor = models.ForeignKey(SurveyorProfile, on_delete=models.SET_NULL, null=True, related_name='antenatal_care')
     visit_date = models.DateField()
     blood_pressure = models.CharField(max_length=10)
     weight = models.FloatField()
@@ -32,7 +33,7 @@ class AntenatalCare(models.Model):
 
 class ObstetricHistory(models.Model):
     mother = models.ForeignKey(Mother, on_delete=models.CASCADE, related_name='obstetric_history')
-    surveyor = models.ForeignKey(Surveyor, on_delete=models.SET_NULL, null=True, related_name='obstetric_history')
+    surveyor = models.ForeignKey(SurveyorProfile, on_delete=models.SET_NULL, null=True, related_name='obstetric_history')
     previous_pregnancies = models.PositiveIntegerField()
     live_births = models.PositiveIntegerField()
     stillbirths = models.PositiveIntegerField()
@@ -45,7 +46,7 @@ class ObstetricHistory(models.Model):
 
 class LaborDelivery(models.Model):
     mother = models.ForeignKey(Mother, on_delete=models.CASCADE, related_name='labor_delivery')
-    surveyor = models.ForeignKey(Surveyor, on_delete=models.SET_NULL, null=True, related_name='labor_delivery')
+    surveyor = models.ForeignKey(SurveyorProfile, on_delete=models.SET_NULL, null=True, related_name='labor_delivery')
     delivery_date = models.DateField()
     place_of_delivery = models.CharField(max_length=100)
     type_of_delivery = models.CharField(max_length=100)
@@ -58,7 +59,7 @@ class LaborDelivery(models.Model):
 
 class PostnatalCare(models.Model):
     mother = models.ForeignKey(Mother, on_delete=models.CASCADE, related_name='postnatal_care')
-    surveyor = models.ForeignKey(Surveyor, on_delete=models.SET_NULL, null=True, related_name='postnatal_care')
+    surveyor = models.ForeignKey(SurveyorProfile, on_delete=models.SET_NULL, null=True, related_name='postnatal_care')
     visit_date = models.DateField()
     health_assessment = models.TextField()
     breastfeeding_support = models.TextField()

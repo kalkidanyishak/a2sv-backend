@@ -5,20 +5,23 @@ from rest_framework import serializers
 from .models import AdminProfile, SurveyorProfile, ClientProfile
 
 class UserSerializer(serializers.ModelSerializer):
-    role = serializers.SerializerMethodField()
+    password = serializers.CharField(write_only=True)
+    role = serializers.ChoiceField(choices=[('admin', 'Admin'), ('surveyor', 'Surveyor'), ('client', 'Client')], write_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'role')
+        fields = ('id', 'username', 'email', 'password', 'role')
 
-    def get_role(self, obj):
-        if hasattr(obj, 'adminprofile'):
-            return 'admin'
-        elif hasattr(obj, 'surveyorprofile'):
-            return 'surveyor'
-        elif hasattr(obj, 'clientprofile'):
-            return 'client'
-        return None
+    def create(self, validated_data):
+        role = validated_data.pop('role')
+        user = User.objects.create_user(**validated_data)
+        if role == 'admin':
+            AdminProfile.objects.create(user=user)
+        elif role == 'surveyor':
+            SurveyorProfile.objects.create(user=user)
+        elif role == 'client':
+            ClientProfile.objects.create(user=user)
+        return user
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
