@@ -31,7 +31,7 @@ class LoginView(APIView):
             password = serializer.validated_data['password']
             user = authenticate(username=username, password=password)
             if user:
-                token, created = Token.objects.get_or_create(user=user)
+                token, created = Token.objects.get_or_create(user=user)  # Correct usage of Token.objects
                 user_data = {
                     'id': user.id,
                     'username': user.username,
@@ -43,6 +43,7 @@ class LoginView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_user_role(self, user):
+        # Custom logic to determine user role based on related models or other criteria
         if hasattr(user, 'adminprofile'):
             return 'admin'
         elif hasattr(user, 'surveyorprofile'):
